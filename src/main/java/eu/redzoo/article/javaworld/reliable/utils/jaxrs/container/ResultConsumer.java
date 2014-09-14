@@ -1,4 +1,4 @@
-package eu.redzoo.article.javaworld.reliable.utils.jaxrs;
+package eu.redzoo.article.javaworld.reliable.utils.jaxrs.container;
 
 
 

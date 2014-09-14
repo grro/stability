@@ -1,6 +1,7 @@
 package eu.redzoo.article.javaworld.reliable.payment;
 
 
+import javax.inject.Singleton;
 import javax.ws.rs.GET;
 import javax.ws.rs.NotFoundException;
 import javax.ws.rs.Path;
@@ -11,7 +12,7 @@ import javax.ws.rs.core.MediaType;
 
 
 
-
+@Singleton
 @Path("Payment")
 public class PaymentResource {
 

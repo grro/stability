@@ -13,11 +13,7 @@ import javax.ws.rs.client.Client;
 import javax.ws.rs.client.ClientBuilder;
 import javax.ws.rs.core.GenericType;
 
-import org.eclipse.jetty.server.Server;
-import org.eclipse.jetty.server.handler.HandlerList;
-import org.eclipse.jetty.server.Handler;
-import org.eclipse.jetty.server.handler.ResourceHandler;
-import org.eclipse.jetty.webapp.WebAppContext;
+import org.apache.catalina.startup.Tomcat;
 import org.junit.AfterClass;
 import org.junit.Assert;
 import org.junit.BeforeClass;
@@ -31,13 +27,16 @@ import static eu.redzoo.article.javaworld.reliable.payment.PaymentMethod.*;
 public class RestServicesTest {
 
     private static Client client;
-    private static Server server;
+    private static Tomcat server;
   
     
     @BeforeClass
     public static void setUp() throws Exception {
         
+        
+        /*
         server = new Server(9080);
+ 
         WebAppContext webapp = new WebAppContext(new File("src/main/resources/webapp").getAbsolutePath(), "/service");
         ResourceHandler resource_handler = new ResourceHandler();
         resource_handler.setWelcomeFiles(new String[]{ "index.html" });
@@ -46,6 +45,18 @@ public class RestServicesTest {
         server.setHandler(handlers);
 
         server.start();
+        */
+        
+        
+        server = new Tomcat();
+        server.setPort(9080);
+        server.addWebapp("/service", new File("src/main/resources/webapp").getAbsolutePath());
+
+        server.start();
+        
+
+        
+        
         
         client = ClientBuilder.newClient();
     }
@@ -98,7 +109,7 @@ public class RestServicesTest {
     public void testRetrievePaymentNotFoundAsync() throws Exception {
         
         try {
-            client.target("http://localhost:9080/service/rest/AsyncPayment/823443")
+            client.target("http://localhost:9080/service/rest/Async/Payment/823443")
                   .request()
                   .get(Payment.class);
 
@@ -138,6 +149,16 @@ public class RestServicesTest {
         Assert.assertTrue(paymentMethods.contains(PAYPAL));
         Assert.assertTrue(paymentMethods.contains(INVOCE));
     }
+    
+    
+    @Test
+    public void testRetrievePaymentMethodNewUserGoodAddressBulk() throws Exception {
+        for (int i = 0; i < 100; i++) {
+            testRetrievePaymentMethodNewUserGoodAddress();
+        }
+    }
+    
+    
     
     
     @Test
