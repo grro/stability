@@ -19,9 +19,9 @@ import org.junit.Assert;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
-import eu.redzoo.article.javaworld.reliable.payment.Payment;
-import eu.redzoo.article.javaworld.reliable.payment.PaymentMethod;
-import static eu.redzoo.article.javaworld.reliable.payment.PaymentMethod.*;
+import eu.redzoo.article.javaworld.reliable.service.payment.Payment;
+import eu.redzoo.article.javaworld.reliable.service.payment.PaymentMethod;
+import static eu.redzoo.article.javaworld.reliable.service.payment.PaymentMethod.*;
 
 
 public class RestServicesTest {

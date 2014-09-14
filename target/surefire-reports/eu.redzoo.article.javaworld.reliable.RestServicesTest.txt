@@ -1,4 +1,0 @@
--------------------------------------------------------------------------------
-Test set: eu.redzoo.article.javaworld.reliable.RestServicesTest
--------------------------------------------------------------------------------
-Tests run: 8, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 3.65 sec
