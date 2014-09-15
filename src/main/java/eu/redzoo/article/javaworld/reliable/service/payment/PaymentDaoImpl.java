@@ -14,11 +14,15 @@ import com.google.common.collect.ImmutableList;
 class PaymentDaoImpl implements PaymentDao, AsyncPaymentDao {
 
     @Override
-    public ImmutableList<Payment> getPayments(String name, String dateOfBirth, String address, int max) {
+    public ImmutableList<Payment> getPayments(String address, int max) {
         
-        if (name.startsWith("A")) {
+        if (address.startsWith("Tom")) {
+            return ImmutableList.of(new Payment(UUID.randomUUID().toString(), false), 
+                                    new Payment(UUID.randomUUID().toString(), false));
+        } else if (address.startsWith("John")) {
             return ImmutableList.of(new Payment(UUID.randomUUID().toString(), true), 
                                     new Payment(UUID.randomUUID().toString(), false));
+
         } else {
             return ImmutableList.of();
         }
@@ -36,8 +40,8 @@ class PaymentDaoImpl implements PaymentDao, AsyncPaymentDao {
 
     
     @Override
-    public CompletableFuture<ImmutableList<Payment>> getPaymentsAsync(String name, String dateOfBirth, String address, int max) {
-        return CompletableFuture.supplyAsync(() -> getPayments(name, dateOfBirth, address, max));
+    public CompletableFuture<ImmutableList<Payment>> getPaymentsAsync(String address, int max) {
+        return CompletableFuture.completedFuture(getPayments(address, max));
     }
     
     

@@ -15,37 +15,23 @@ import javax.ws.rs.core.MediaType;
 @Path("/")
 public class AddressScoreResource {
 
+    
     @Path("AddressScore")
     @GET
     @Produces(MediaType.APPLICATION_XML)
-    public Score getScore(@QueryParam("firstName") String firstName,
-                          @QueryParam("lastName") String lastName,
-                          @QueryParam("dateOfBirth") String dateOfBirth,
-                          @QueryParam("address") String address) {
+    public void getScoreAsync(@QueryParam("addr") String address, @Suspended AsyncResponse asyncResponse) {
         
-        if (address.startsWith("3736")) {
-            return Score.POSITIVE;
-        } if (address.startsWith("1736")) {
-            return Score.NEGATIVE;
-        } else {
-            return Score.NEUTRAL;
-        }
-    }
-    
-    
-    @Path("AddressScore2")
-    @GET
-    @Produces(MediaType.APPLICATION_XML)
-    public void getScoreAsync(@QueryParam("firstName") String firstName,
-                              @QueryParam("lastName") String lastName,
-                              @QueryParam("dateOfBirth") String dateOfBirth,
-                              @QueryParam("address") String address,
-                              @Suspended AsyncResponse asyncResponse) {
-        
+        // simulate I/O
         new Thread(new Runnable() {
             @Override
             public void run() {
-                asyncResponse.resume(getScore(firstName, lastName, dateOfBirth, address));
+                if (address.contains("5736 Richmond Ave ")) {
+                    asyncResponse.resume(Score.POSITIVE);
+                } if (address.contains("2434 Baltin Ave")) {
+                    asyncResponse.resume(Score.NEGATIVE);
+                } else {
+                    asyncResponse.resume(Score.NEUTRAL);
+                }
             }
         }).start();
     }

@@ -13,7 +13,11 @@ public class MetricsRegistry {
     private final int maxEntries = 100;
     private final int bufferSize = 1000;
 
-    public TransactionMetrics transactions(String scope) {        
+    public TransactionMetrics transactions(String scope) {  
+        if (scope == null) {
+            scope = "__<NULL>__";
+        }
+        
         TransactionMetrics metrics = metricsMap.get(scope);
         if ((metrics == null) && (metricsMap.size() < maxEntries)) {
             metrics = new TransactionMetrics(bufferSize);

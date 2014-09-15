@@ -1,12 +1,10 @@
 package eu.redzoo.article.javaworld.reliable.utils.circuitbreaker;
 
 
+import java.time.Duration;
 import java.util.Map;
 
 import jersey.repackaged.com.google.common.collect.Maps;
-import eu.redzoo.article.javaworld.reliable.utils.circuitbreaker.metrics.MetricsRegistry;
-import eu.redzoo.article.javaworld.reliable.utils.circuitbreaker.policy.CircuitBreakerPolicy;
-
 
 
 
@@ -16,20 +14,22 @@ public class CircuitBreakerRegistry {
     
     private final int maxEntries = 100;
 
-    private final CircuitBreakerPolicy policy;
-    private final MetricsRegistry metricsRegistry;
+    private final HealthPolicy healthPolicy;
+
     
-    
-    public CircuitBreakerRegistry(MetricsRegistry metricsRegistry, CircuitBreakerPolicy policy) {
-        this.metricsRegistry = metricsRegistry;
-        this.policy = policy;
+    public CircuitBreakerRegistry(HealthPolicy healthPolicy) {
+        this.healthPolicy = healthPolicy;
     }
     
     
     public CircuitBreaker get(String scope) {        
+        if (scope == null) {
+            scope = "__<NULL>__";
+        }
+        
         CircuitBreaker circuitBreaker = circuitBreakerMap.get(scope);
         if ((circuitBreaker == null) && (circuitBreakerMap.size() < maxEntries)) {
-            circuitBreaker = new CircuitBreaker(metricsRegistry.transactions(scope), policy);
+            circuitBreaker = new CircuitBreaker(scope, healthPolicy, Duration.ofSeconds(3));
             circuitBreakerMap.put(scope, circuitBreaker);
         }
         

@@ -11,8 +11,6 @@ import javax.management.MBeanServer;
 import javax.management.ObjectInstance;
 import javax.management.ObjectName;
 
-import com.google.common.collect.ImmutableSet;
-import com.google.common.collect.ImmutableSet.Builder;
 
 
 
@@ -23,16 +21,15 @@ public class TomcatEnvironment implements Environment {
     
     
     @Override
-    public ImmutableSet<Threadpool> getThreadpoolUsage() {
-        Builder<Threadpool> builder = new ImmutableSet.Builder<>();
+    public Threadpool getThreadpoolUsage() {
+        
+        Threadpool pool = null;
         
         MBeanServer mbeanServer = ManagementFactory.getPlatformMBeanServer();
         if (mbeanServer != null) {
             try {
-                
                 Set<ObjectInstance> threadPoolMBeans = mbeanServer.queryMBeans(new ObjectName("*:type=*,*"), null);
 
-                
                 threadPoolMBeans = mbeanServer.queryMBeans(new ObjectName("*:type=ThreadPool,*"), null);
 
                 for (ObjectInstance threadPoolMBean : threadPoolMBeans) {
@@ -42,8 +39,10 @@ public class TomcatEnvironment implements Environment {
                     Integer currentThreadsBusy = (Integer) mbeanServer.getAttribute(objectName, "currentThreadsBusy");
 
                     String name = (objectName.getKeyProperty("name") == null) ? "unknown" : objectName.getKeyProperty("name");
-                    
-                    builder.add(new Threadpool(name, maxThreads, currentThreadCount, currentThreadsBusy));
+
+                    if ((pool == null) || (maxThreads > pool.getMaxThreads())) {
+                        pool = new Threadpool(name, maxThreads, currentThreadCount, currentThreadsBusy);
+                    }
                 }
 
             } catch (JMException | RuntimeException e) {
@@ -51,6 +50,6 @@ public class TomcatEnvironment implements Environment {
             }
         }
 
-        return builder.build();
+        return pool;
     }
 }

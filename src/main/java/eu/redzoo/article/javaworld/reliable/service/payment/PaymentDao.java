@@ -11,7 +11,7 @@ import com.google.common.collect.ImmutableList;
 
 interface PaymentDao {
 
-    ImmutableList<Payment> getPayments(String name, String dateOfBirth, String address, int max);
+    ImmutableList<Payment> getPayments(String address, int max);
     
     Optional<Payment> getPayment(String id);
 }

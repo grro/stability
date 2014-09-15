@@ -17,7 +17,7 @@ import eu.redzoo.article.javaworld.reliable.utils.jaxrs.container.ResultConsumer
 
 
 @Singleton
-@Path("Async/Payment")
+@Path("Payment")
 public class AsyncPaymentResource {
 
     private final AsyncPaymentDao paymentDao;

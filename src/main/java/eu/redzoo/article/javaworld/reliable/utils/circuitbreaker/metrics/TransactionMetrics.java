@@ -23,7 +23,7 @@ public class TransactionMetrics  {
     }
   
     
-    public Transactions getRecordedTransactions() {
+    public Transactions recorded() {
         return new Transactions(ringbuffer.getTransactions());
     }
     

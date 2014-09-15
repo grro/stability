@@ -19,6 +19,7 @@ import org.junit.Assert;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
+import eu.redzoo.article.javaworld.reliable.service.scoring.Score;
 import eu.redzoo.article.javaworld.reliable.service.payment.Payment;
 import eu.redzoo.article.javaworld.reliable.service.payment.PaymentMethod;
 import static eu.redzoo.article.javaworld.reliable.service.payment.PaymentMethod.*;
@@ -77,8 +78,47 @@ public class RestServicesTest {
                                 .request()
                                 .get(Payment.class);
         
-        System.out.println(payment);
+        Assert.assertNotNull(payment);
     }
+    
+
+    
+
+    @Test
+    public void testAddressScoreGood() throws Exception {
+        Score score = client.target("http://localhost:9080/service/rest/AddressScore")
+                            .queryParam("addr", "Michael Smith, 5736 Richmond Ave 2 Wappingers FL, NY 12990-9103")
+                            .request()
+                            .get(Score.class);
+        
+        Assert.assertEquals(Score.POSITIVE, score);
+    }
+
+    
+    
+
+    @Test
+    public void testAddressScoreNeutral() throws Exception {
+        Score score = client.target("http://localhost:9080/service/rest/AddressScore")
+                            .queryParam("addr", "Michael Smith, 9424 Westend Ave 2 Wappingers FL, NY 12990-9103")
+                            .request()
+                            .get(Score.class);
+        
+        Assert.assertEquals(Score.NEUTRAL, score);
+    }
+    
+
+    @Test
+    public void testAddressScoreBad() throws Exception {
+        Score score = client.target("http://localhost:9080/service/rest/AddressScore")
+                            .queryParam("addr", "Michael Smith, 2434 Baltin Ave 2 Wappingers FL, NY 12990-9103")
+                            .request()
+                            .get(Score.class);
+        
+        Assert.assertEquals(Score.NEGATIVE, score);
+    }
+    
+
     
     
     @Test
@@ -95,15 +135,7 @@ public class RestServicesTest {
     
     
 
-    @Test
-    public void testRetrievePaymentAsync() throws Exception {
-        Payment payment = client.target("http://localhost:9080/service/rest/Async/Payment/123443")
-                                .request()
-                                .get(Payment.class);
-        
-        System.out.println(payment);
-    }
-    
+
     
     @Test
     public void testRetrievePaymentNotFoundAsync() throws Exception {
@@ -123,9 +155,7 @@ public class RestServicesTest {
     @Test
     public void testRetrievePaymentMethodNewUserBadAddress() throws Exception {
         Set<PaymentMethod> paymentMethods = client.target("http://localhost:9080/service/rest/PaymentMethod")
-                                                  .queryParam("name", "Michael Smith")
-                                                  .queryParam("dateOfBirth", "05.11.1995")
-                                                  .queryParam("address", "1736 Richmond Ave 2 Wappingers FL, NY 12990-9103")
+                                                  .queryParam("addr", "Michael Smith, 2434 Baltin Ave 2 Wappingers FL, NY 12990-9103")
                                                   .request()
                                                   .get(new GenericType<Set<PaymentMethod>>() { });    
          
@@ -137,10 +167,9 @@ public class RestServicesTest {
     @Test
     public void testRetrievePaymentMethodNewUserGoodAddress() throws Exception {
         Set<PaymentMethod> paymentMethods = client.target("http://localhost:9080/service/rest/PaymentMethod")
-                                                  .queryParam("name", "Michael Smith")
-                                                  .queryParam("dateOfBirth", "05.11.1995")
-                                                  .queryParam("address", "3736 Richmond Ave 2 Wappingers FL, NY 12990-9103")
+                                                  .queryParam("addr", "Michael Smith, 5736 Richmond Ave 2 Wappingers FL, NY 12990-9103")
                                                   .request()
+                                                  .header("X-Client", "Testapp")
                                                   .get(new GenericType<Set<PaymentMethod>>() { });    
         
         Assert.assertEquals(4, paymentMethods.size());
@@ -164,9 +193,7 @@ public class RestServicesTest {
     @Test
     public void testRetrievePaymentMethodNewUserUnknownAddress() throws Exception {
         Set<PaymentMethod> paymentMethods = client.target("http://localhost:9080/service/rest/PaymentMethod")
-                                                  .queryParam("name", "Michael Smith")
-                                                  .queryParam("dateOfBirth", "05.11.1995")
-                                                  .queryParam("address", "5736 Richmond Ave 2 Wappingers FL, NY 12990-9103")
+                                                  .queryParam("addr", "Michael Smith, 9424 Westend Ave 2 Wappingers FL, NY 12990-9103")
                                                   .request()
                                                   .get(new GenericType<Set<PaymentMethod>>() { });    
         
@@ -174,66 +201,32 @@ public class RestServicesTest {
         Assert.assertTrue(paymentMethods.contains(PREPAYMENT));
         Assert.assertTrue(paymentMethods.contains(CREDITCARD));
         Assert.assertTrue(paymentMethods.contains(PAYPAL));
-        
-        client.target("http://localhost:9080/service/rest/PaymentMethod")
-                .queryParam("name", "Michael Smith")
-                .queryParam("dateOfBirth", "05.11.1995")
-                .queryParam("address", "5736 Richmond Ave 2 Wappingers FL, NY 12990-9103")
-                .request()
-                .get(new GenericType<Set<PaymentMethod>>() { });    
-
     }
     
     
-    
-/*
     @Test
-    public void testRetrievePaymentMethodNewUserBadAddressAsync() throws Exception {
-        Set<PaymentMethod> paymentMethods = client.target("http://localhost:9080/service/rest/Async/PaymentMethod")
-                                                  .queryParam("firstName", "Michael")
-                                                  .queryParam("lastName", "Smith")
-                                                  .queryParam("dateOfBirth", "05.11.1995")
-                                                  .queryParam("address", "1736 Richmond Ave 2 Wappingers FL, NY 12990-9103")
+    public void testRetrievePaymentMethodKnownUserGood() throws Exception {
+        Set<PaymentMethod> paymentMethods = client.target("http://localhost:9080/service/rest/PaymentMethod")
+                                                  .queryParam("addr", "Tom Smith, 2434 Baltin Ave 2 Wappingers FL, NY 12990-9103")
+                                                  .request()
+                                                  .get(new GenericType<Set<PaymentMethod>>() { });    
+         
+        Assert.assertEquals(4, paymentMethods.size());
+        Assert.assertTrue(paymentMethods.contains(INVOCE));
+        Assert.assertTrue(paymentMethods.contains(PREPAYMENT));
+        Assert.assertTrue(paymentMethods.contains(CREDITCARD));
+        Assert.assertTrue(paymentMethods.contains(PAYPAL));
+    }
+    
+    
+    @Test
+    public void testRetrievePaymentMethodKnownUserBad() throws Exception {
+        Set<PaymentMethod> paymentMethods = client.target("http://localhost:9080/service/rest/PaymentMethod")
+                                                  .queryParam("addr", "John Smith, 2434 Baltin Ave 2 Wappingers FL, NY 12990-9103")
                                                   .request()
                                                   .get(new GenericType<Set<PaymentMethod>>() { });    
          
         Assert.assertEquals(1, paymentMethods.size());
         Assert.assertTrue(paymentMethods.contains(PREPAYMENT));
     }
-    
-    
-    @Test
-    public void testRetrievePaymentMethodNewUserGoodAddressAsync() throws Exception {
-        Set<PaymentMethod> paymentMethods = client.target("http://localhost:9080/service/rest/Async/PaymentMethod")
-                                                  .queryParam("firstName", "Michael")
-                                                  .queryParam("lastName", "Smith")
-                                                  .queryParam("dateOfBirth", "05.11.1995")
-                                                  .queryParam("address", "3736 Richmond Ave 2 Wappingers FL, NY 12990-9103")
-                                                  .request()
-                                                  .get(new GenericType<Set<PaymentMethod>>() { });    
-        
-        Assert.assertEquals(4, paymentMethods.size());
-        Assert.assertTrue(paymentMethods.contains(PREPAYMENT));
-        Assert.assertTrue(paymentMethods.contains(CREDITCARD));
-        Assert.assertTrue(paymentMethods.contains(PAYPAL));
-        Assert.assertTrue(paymentMethods.contains(INVOCE));
-    }
-    
-    
-    @Test
-    public void testRetrievePaymentMethodNewUserUnknownAddressAsync() throws Exception {
-        Set<PaymentMethod> paymentMethods = client.target("http://localhost:9080/service/rest/Async/PaymentMethod")
-                                                  .queryParam("firstName", "Michael")
-                                                  .queryParam("lastName", "Smith")
-                                                  .queryParam("dateOfBirth", "05.11.1995")
-                                                  .queryParam("address", "5736 Richmond Ave 2 Wappingers FL, NY 12990-9103")
-                                                  .request()
-                                                  .get(new GenericType<Set<PaymentMethod>>() { });    
-        
-        Assert.assertEquals(3, paymentMethods.size());
-        Assert.assertTrue(paymentMethods.contains(PREPAYMENT));
-        Assert.assertTrue(paymentMethods.contains(CREDITCARD));
-        Assert.assertTrue(paymentMethods.contains(PAYPAL));
-    }
-*/
 }

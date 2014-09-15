@@ -12,7 +12,7 @@ import com.google.common.collect.ImmutableList;
 
 interface AsyncPaymentDao {
 
-    CompletableFuture<ImmutableList<Payment>> getPaymentsAsync(String name, String dateOfBirth, String address, int max);
+    CompletableFuture<ImmutableList<Payment>> getPaymentsAsync(String address, int max);
     
     CompletableFuture<Optional<Payment>> getPaymentAsync(String id);
 }

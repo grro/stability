@@ -1,7 +1,5 @@
 package eu.redzoo.article.javaworld.reliable.utils.jaxrs.container.environment;
 
-import com.google.common.collect.ImmutableSet;
-
 
 
 
@@ -11,7 +9,7 @@ import com.google.common.collect.ImmutableSet;
 public interface Environment  {
 
     
-    ImmutableSet<Threadpool> getThreadpoolUsage();       
+    Threadpool getThreadpoolUsage();       
 
     
     
