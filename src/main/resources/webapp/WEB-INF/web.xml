@@ -10,7 +10,7 @@
 		<init-param>
 			<param-name>jersey.config.server.provider.packages</param-name>
 			<param-value>
-        eu.redzoo.article.javaworld.reliable
+        eu.redzoo.article.javaworld.stability
     </param-value>
 		</init-param>
 		<async-supported>true</async-supported>
