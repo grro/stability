@@ -18,12 +18,14 @@ package eu.redzoo.article.javaworld.stability.utils.jaxrs.container.circuitbreak
 
 import java.time.Duration;
 
+
 import eu.redzoo.article.javaworld.stability.utils.circuitbreaker.HealthPolicy;
 import eu.redzoo.article.javaworld.stability.utils.circuitbreaker.metrics.MetricsRegistry;
 import eu.redzoo.article.javaworld.stability.utils.circuitbreaker.metrics.TransactionMetrics;
-import eu.redzoo.article.javaworld.stability.utils.jaxrs.container.environment.Environment;
-import eu.redzoo.article.javaworld.stability.utils.jaxrs.container.environment.TomcatEnvironment;
-import eu.redzoo.article.javaworld.stability.utils.jaxrs.container.environment.Environment.Threadpool;
+import eu.redzoo.article.javaworld.stability.utils.jaxrs.container.Environment;
+import eu.redzoo.article.javaworld.stability.utils.jaxrs.container.Environment.Threadpool;
+import eu.redzoo.article.javaworld.stability.utils.jaxrs.container.tomcat.TomcatEnvironment;
+
 
 
 public class OverloadBasedHealthPolicy implements HealthPolicy  {
