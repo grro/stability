@@ -25,7 +25,7 @@ import eu.redzoo.article.javaworld.stability.utils.circuitbreaker.metrics.Transa
 public class ErrorRateBasedHealthPolicy implements HealthPolicy  {
   
     private final MetricsRegistry metricsRegistry;
-    private final int thresholdMinRatePerMin;
+    private final int thresholdMinReqPerMin;
     
     // ...
   
@@ -36,15 +36,15 @@ public class ErrorRateBasedHealthPolicy implements HealthPolicy  {
     
     public ErrorRateBasedHealthPolicy(MetricsRegistry metricsRegistry, int thresholdMinRatePerMin) {
         this.metricsRegistry = metricsRegistry;
-        this.thresholdMinRatePerMin = thresholdMinRatePerMin;
+        this.thresholdMinReqPerMin = thresholdMinRatePerMin;
     }
   
     
     @Override
     public boolean isHealthy(String scope) {
-        Transactions transactions =  metricsRegistry.transactions(scope).ofLast(Duration.ofSeconds(60));
+        Transactions transactions =  metricsRegistry.transactions(scope).ofLast(Duration.ofMinutes(1));
 
-        return ! ((transactions.size() > thresholdMinRatePerMin) &&        // check threshold reached?
+        return ! ((transactions.size() > thresholdMinReqPerMin) &&        // check threshold reached?
                   (transactions.failed().size() == transactions.size()) && // every call failed?
                   (true)                                    );             // client connection pool limit reached?
     }

@@ -46,10 +46,10 @@ import static eu.redzoo.article.javaworld.stability.service.scoring.Score.*;
   
 
 @Singleton
-@Path("Async/PaymentMethod")
+@Path("async/paymentmethods")
 public class AsyncPaymentMethodResource {
 
-    private static final URI addrScoreURI = URI.create("http://localhost:9080/service/rest/AddressScore"); 
+    private static final URI addrScoreURI = URI.create("http://localhost:9080/service/rest/addressscores"); 
 
     
     private final Java8Client client;
@@ -65,7 +65,7 @@ public class AsyncPaymentMethodResource {
         RequestConfig reqConfig = RequestConfig.custom()                   // apache HttpClient specific
                                                .setConnectTimeout(1000)
                                                .setSocketTimeout(1000)
-                                               .setConnectionRequestTimeout(100)
+                                               .setConnectionRequestTimeout(200)
                                                .build();            
         
   //      clientConfig.property(ApacheClientProperties.REQUEST_CONFIG, reqConfig); // jersey specific

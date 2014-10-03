@@ -53,7 +53,7 @@ public class OverloadBasedHealthPolicy implements HealthPolicy  {
         if (pool.getCurrentThreadsBusy() >= pool.getMaxThreads()) {
             TransactionMetrics metrics = metricsRegistry.transactions(scope);
             
-            // [2] more than 90% currently consumed by this operation?
+            // [2] more than 80% currently consumed by this operation?
             if (metrics.running().size() > (pool.getMaxThreads() * 0.8)) {
 
                 // [3] is 50percentile higher than slow threshold?

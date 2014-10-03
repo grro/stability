@@ -31,7 +31,7 @@ import javax.ws.rs.core.MediaType;
 public class AddressScoreResource {
 
     
-    @Path("AddressScore")
+    @Path("addressscores")
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     public void getScoreAsync(@QueryParam("addr") String address, @Suspended AsyncResponse asyncResponse) {

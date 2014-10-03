@@ -35,7 +35,7 @@ public class TransactionMetrics implements Transactions {
     }
     
     
-    public Transaction newTransaction() {
+    public Transaction openTransaction() {
         Transaction transaction = new Transaction();
         ringbuffer.addEntry(transaction);
         

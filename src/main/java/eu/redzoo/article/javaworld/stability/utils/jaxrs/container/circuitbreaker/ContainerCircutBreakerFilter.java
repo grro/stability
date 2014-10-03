@@ -65,7 +65,7 @@ public class ContainerCircutBreakerFilter implements ContainerRequestFilter, Con
             throw new CircuitOpenedException("circuit is open");
         }
         
-        Transaction transaction = metricsRegistry.transactions(targetOperation).newTransaction();
+        Transaction transaction = metricsRegistry.transactions(targetOperation).openTransaction();
         requestContext.setProperty(TRANSACTION, transaction);
     }
 

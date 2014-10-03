@@ -76,7 +76,7 @@ public class CircuitBreaker {
     
     
     private final class HalfOpenState implements CircuitBreakerState {
-        private double chance = 0.05;  // 5% will be passed through
+        private double chance = 0.02;  // 2% will be passed through
 
         @Override
         public boolean isRequestAllowed() {

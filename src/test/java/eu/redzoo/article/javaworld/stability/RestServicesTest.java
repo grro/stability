@@ -20,7 +20,6 @@ package eu.redzoo.article.javaworld.stability;
 
 
 import java.io.File;
-
 import java.util.Set;
 
 import javax.ws.rs.NotFoundException;
@@ -50,6 +49,7 @@ public class RestServicesTest {
     private static Client client;
     private static Tomcat server;
   
+    
     
     @BeforeClass
     public static void setUp() throws Exception {
@@ -110,7 +110,7 @@ public class RestServicesTest {
 
     @Test
     public void testRetrievePayment() throws Exception {
-        Payment payment = client.target("http://localhost:9080/service/rest/Payment/123443")
+        Payment payment = client.target("http://localhost:9080/service/rest/payments/123443")
                                 .request()
                                 .get(Payment.class);
         
@@ -121,7 +121,7 @@ public class RestServicesTest {
 
     @Test
     public void testAddressScoreGood() throws Exception {
-        Score score = client.target("http://localhost:9080/service/rest/AddressScore")
+        Score score = client.target("http://localhost:9080/service/rest/addressscores")
                             .queryParam("addr", "Michael Smith, 5736 Richmond Ave 2 Wappingers FL, NY 12990-9103")
                             .request()
                             .get(Score.class);
@@ -134,7 +134,7 @@ public class RestServicesTest {
 
     @Test
     public void testAddressScoreNeutral() throws Exception {
-        Score score = client.target("http://localhost:9080/service/rest/AddressScore")
+        Score score = client.target("http://localhost:9080/service/rest/addressscores")
                             .queryParam("addr", "Michael Smith, 9424 Westend Ave 2 Wappingers FL, NY 12990-9103")
                             .request()
                             .get(Score.class);
@@ -145,7 +145,7 @@ public class RestServicesTest {
 
     @Test
     public void testAddressScoreBad() throws Exception {
-        Score score = client.target("http://localhost:9080/service/rest/AddressScore")
+        Score score = client.target("http://localhost:9080/service/rest/addressscores")
                             .queryParam("addr", "Michael Smith, 2434 Baltin Ave 2 Wappingers FL, NY 12990-9103")
                             .request()
                             .get(Score.class);
@@ -160,7 +160,7 @@ public class RestServicesTest {
     public void testRetrievePaymentNotFound() throws Exception {
         
         try {
-            client.target("http://localhost:9080/service/rest/Payment/823443")
+            client.target("http://localhost:9080/service/rest/payments/823443")
                   .request()
                   .get(Payment.class);
 
@@ -176,7 +176,7 @@ public class RestServicesTest {
     public void testRetrievePaymentNotFoundAsync() throws Exception {
         
         try {
-            client.target("http://localhost:9080/service/rest/Async/Payment/823443")
+            client.target("http://localhost:9080/service/rest/Async/payments/823443")
                   .request()
                   .get(Payment.class);
 
@@ -189,7 +189,7 @@ public class RestServicesTest {
 
     @Test
     public void testRetrievePaymentMethodNewUserBadAddress() throws Exception {
-        Set<PaymentMethod> paymentMethods = client.target("http://localhost:9080/service/rest/PaymentMethod")
+        Set<PaymentMethod> paymentMethods = client.target("http://localhost:9080/service/rest/paymentmethods")
                                                   .queryParam("addr", "Michael Smith, 2434 Baltin Ave 2 Wappingers FL, NY 12990-9103")
                                                   .request()
                                                   .get(new GenericType<Set<PaymentMethod>>() { });    
@@ -201,7 +201,7 @@ public class RestServicesTest {
     
     @Test
     public void testRetrievePaymentMethodNewUserGoodAddress() throws Exception {
-        Set<PaymentMethod> paymentMethods = client.target("http://localhost:9080/service/rest/PaymentMethod")
+        Set<PaymentMethod> paymentMethods = client.target("http://localhost:9080/service/rest/paymentmethods")
                                                   .queryParam("addr", "Michael Smith, 5736 Richmond Ave 2 Wappingers FL, NY 12990-9103")
                                                   .request()
                                                   .header("X-Client", "Testapp")
@@ -218,7 +218,7 @@ public class RestServicesTest {
 
     @Test
     public void testRetrievePaymentMethodNewUserGoodAddressAsync() throws Exception {
-        Set<PaymentMethod> paymentMethods = client.target("http://localhost:9080/service/rest/Async/PaymentMethod")
+        Set<PaymentMethod> paymentMethods = client.target("http://localhost:9080/service/rest/async/paymentmethods")
                                                   .queryParam("addr", "Michael Smith, 5736 Richmond Ave 2 Wappingers FL, NY 12990-9103")
                                                   .request()
                                                   .header("X-Client", "Testapp")
@@ -244,7 +244,7 @@ public class RestServicesTest {
     
     @Test
     public void testRetrievePaymentMethodNewUserUnknownAddress() throws Exception {
-        Set<PaymentMethod> paymentMethods = client.target("http://localhost:9080/service/rest/PaymentMethod")
+        Set<PaymentMethod> paymentMethods = client.target("http://localhost:9080/service/rest/paymentmethods")
                                                   .queryParam("addr", "Michael Smith, 9424 Westend Ave 2 Wappingers FL, NY 12990-9103")
                                                   .request()
                                                   .get(new GenericType<Set<PaymentMethod>>() { });    
@@ -258,7 +258,7 @@ public class RestServicesTest {
     
     @Test
     public void testRetrievePaymentMethodKnownUserGood() throws Exception {
-        Set<PaymentMethod> paymentMethods = client.target("http://localhost:9080/service/rest/PaymentMethod")
+        Set<PaymentMethod> paymentMethods = client.target("http://localhost:9080/service/rest/paymentmethods")
                                                   .queryParam("addr", "Tom Smith, 2434 Baltin Ave 2 Wappingers FL, NY 12990-9103")
                                                   .request()
                                                   .get(new GenericType<Set<PaymentMethod>>() { });    
@@ -273,7 +273,7 @@ public class RestServicesTest {
     
     @Test
     public void testRetrievePaymentMethodKnownUserBad() throws Exception {
-        Set<PaymentMethod> paymentMethods = client.target("http://localhost:9080/service/rest/PaymentMethod")
+        Set<PaymentMethod> paymentMethods = client.target("http://localhost:9080/service/rest/paymentmethods")
                                                   .queryParam("addr", "John Smith, 2434 Baltin Ave 2 Wappingers FL, NY 12990-9103")
                                                   .request()
                                                   .get(new GenericType<Set<PaymentMethod>>() { });    

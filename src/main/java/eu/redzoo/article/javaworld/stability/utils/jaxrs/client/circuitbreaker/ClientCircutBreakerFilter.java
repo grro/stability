@@ -54,7 +54,7 @@ public class ClientCircutBreakerFilter implements ClientRequestFilter, ClientRes
             throw new CircuitOpenedException("circuit is open");
         }
 
-        Transaction transaction = metricsRegistry.transactions(targetHost).newTransaction();
+        Transaction transaction = metricsRegistry.transactions(targetHost).openTransaction();
         requestContext.setProperty(TRANSACTION, transaction);
     }
     

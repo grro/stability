@@ -51,7 +51,7 @@ public class HandshakingFilter implements ContainerRequestFilter, ContainerRespo
     @Override
     public void filter(ContainerRequestContext requestContext) throws IOException {
         String clientId = requestContext.getHeaderString("X-Client");
-        requestContext.setProperty(TRANSACTION, metricsRegistry.transactions(clientId).newTransaction());
+        requestContext.setProperty(TRANSACTION, metricsRegistry.transactions(clientId).openTransaction());
     }
 
     @Override

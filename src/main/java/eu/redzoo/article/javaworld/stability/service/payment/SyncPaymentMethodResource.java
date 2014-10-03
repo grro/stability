@@ -44,12 +44,12 @@ import static eu.redzoo.article.javaworld.stability.service.scoring.Score.*;
   
 
 @Singleton
-@Path("PaymentMethod")
+@Path("paymentmethods")
 public class SyncPaymentMethodResource {
 
     private static final Logger LOG = Logger.getLogger(SyncPaymentMethodResource.class.getName());
     
-    private static final URI addrScoreURI = URI.create("http://localhost:9080/service/rest/AddressScore"); 
+    private static final URI addrScoreURI = URI.create("http://localhost:9080/service/rest/addressscores"); 
 
     private final Client client;
     private final PaymentDao paymentDao; 

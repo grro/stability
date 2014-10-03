@@ -33,7 +33,7 @@ import eu.redzoo.article.javaworld.stability.utils.jaxrs.client.ResultConsumer;
 
 
 @Singleton
-@Path("Payment")
+@Path("payments")
 public class AsyncPaymentResource {
 
     private final AsyncPaymentDao paymentDao;
