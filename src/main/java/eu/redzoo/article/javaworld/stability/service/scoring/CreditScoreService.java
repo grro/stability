@@ -28,7 +28,7 @@ import javax.ws.rs.core.MediaType;
 
 
 @Path("/")
-public class CreditScoreResource {
+public class CreditScoreService {
 
     
     @Path("creditscores")
