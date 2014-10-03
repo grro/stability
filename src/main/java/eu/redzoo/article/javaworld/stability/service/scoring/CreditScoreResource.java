@@ -28,10 +28,10 @@ import javax.ws.rs.core.MediaType;
 
 
 @Path("/")
-public class AddressScoreResource {
+public class CreditScoreResource {
 
     
-    @Path("addressscores")
+    @Path("creditscores")
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     public void getScoreAsync(@QueryParam("addr") String address, @Suspended AsyncResponse asyncResponse) {

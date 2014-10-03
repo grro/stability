@@ -49,7 +49,7 @@ import static eu.redzoo.article.javaworld.stability.service.scoring.Score.*;
 @Path("async/paymentmethods")
 public class AsyncPaymentMethodResource {
 
-    private static final URI addrScoreURI = URI.create("http://localhost:9080/service/rest/addressscores"); 
+    private static final URI creditScoreURI = URI.create("http://localhost:9080/service/rest/creditscores"); 
 
     
     private final Java8Client client;
@@ -100,7 +100,7 @@ public class AsyncPaymentMethodResource {
     public void getPaymentMethodsAsync(@QueryParam("addr") String address, @Suspended AsyncResponse resp) {
         paymentDao.getPaymentsAsync(address, 50)
            .thenCompose(pmts -> pmts.isEmpty() 
-              ? client.target(addrScoreURI).queryParam("addr", address).request().async().get(Score.class) 
+              ? client.target(creditScoreURI).queryParam("addr", address).request().async().get(Score.class) 
               : CompletableFuture.completedFuture((pmts.stream().filter(pmt -> pmt.isDelayed()).count() > 1) ? NEGATIVE : POSITIVE))
            .exceptionally(error -> 
            NEUTRAL)

@@ -121,7 +121,7 @@ public class RestServicesTest {
 
     @Test
     public void testAddressScoreGood() throws Exception {
-        Score score = client.target("http://localhost:9080/service/rest/addressscores")
+        Score score = client.target("http://localhost:9080/service/rest/creditscores")
                             .queryParam("addr", "Michael Smith, 5736 Richmond Ave 2 Wappingers FL, NY 12990-9103")
                             .request()
                             .get(Score.class);
@@ -134,7 +134,7 @@ public class RestServicesTest {
 
     @Test
     public void testAddressScoreNeutral() throws Exception {
-        Score score = client.target("http://localhost:9080/service/rest/addressscores")
+        Score score = client.target("http://localhost:9080/service/rest/creditscores")
                             .queryParam("addr", "Michael Smith, 9424 Westend Ave 2 Wappingers FL, NY 12990-9103")
                             .request()
                             .get(Score.class);
@@ -145,7 +145,7 @@ public class RestServicesTest {
 
     @Test
     public void testAddressScoreBad() throws Exception {
-        Score score = client.target("http://localhost:9080/service/rest/addressscores")
+        Score score = client.target("http://localhost:9080/service/rest/creditscores")
                             .queryParam("addr", "Michael Smith, 2434 Baltin Ave 2 Wappingers FL, NY 12990-9103")
                             .request()
                             .get(Score.class);

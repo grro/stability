@@ -49,7 +49,7 @@ public class SyncPaymentMethodResource {
 
     private static final Logger LOG = Logger.getLogger(SyncPaymentMethodResource.class.getName());
     
-    private static final URI addrScoreURI = URI.create("http://localhost:9080/service/rest/addressscores"); 
+    private static final URI creditScoreURI = URI.create("http://localhost:9080/service/rest/creditscores"); 
 
     private final Client client;
     private final PaymentDao paymentDao; 
@@ -98,7 +98,7 @@ public class SyncPaymentMethodResource {
         try { 
             ImmutableList<Payment> pmts = paymentDao.getPayments(address, 50);
             score = pmts.isEmpty()
-                       ? client.target(addrScoreURI).queryParam("addr", address).request().get(Score.class)
+                       ? client.target(creditScoreURI).queryParam("addr", address).request().get(Score.class)
                        : (pmts.stream().filter(pmt -> pmt.isDelayed()).count() >= 1) ? NEGATIVE : POSITIVE;
         } catch (RuntimeException rt) {
             LOG.fine("error occurred by calculating score. Fallback to NEUTRAL " + rt.toString());
