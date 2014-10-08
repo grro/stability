@@ -48,13 +48,13 @@ public class ClientCircutBreakerFilter implements ClientRequestFilter, ClientRes
     
     @Override
     public void filter(ClientRequestContext requestContext) throws IOException, CircuitOpenedException {
-        String targetHost = requestContext.getUri().getHost();
+        String scope = requestContext.getUri().getHost();
 
-        if (!circuitBreakerRegistry.get(targetHost).isRequestAllowed()) {
+        if (!circuitBreakerRegistry.get(scope).isRequestAllowed()) {
             throw new CircuitOpenedException("circuit is open");
         }
 
-        Transaction transaction = metricsRegistry.transactions(targetHost).openTransaction();
+        Transaction transaction = metricsRegistry.transactions(scope).openTransaction();
         requestContext.setProperty(TRANSACTION, transaction);
     }
     

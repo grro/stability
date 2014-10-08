@@ -32,7 +32,6 @@ import javax.ws.rs.container.AsyncResponse;
 import javax.ws.rs.container.Suspended;
 import javax.ws.rs.core.MediaType;
 
-import org.apache.http.client.config.RequestConfig;
 import org.glassfish.jersey.client.ClientConfig;
 import org.glassfish.jersey.grizzly.connector.GrizzlyConnectorProvider;
 
@@ -43,7 +42,6 @@ import eu.redzoo.article.javaworld.stability.utils.jaxrs.client.Java8Client;
 import eu.redzoo.article.javaworld.stability.utils.jaxrs.client.ResultConsumer;
 import eu.redzoo.article.javaworld.stability.utils.jaxrs.client.circuitbreaker.ClientCircutBreakerFilter;
 import static eu.redzoo.article.javaworld.stability.service.payment.PaymentMethod.*;
-import static eu.redzoo.article.javaworld.stability.service.scoring.Score.*;
 
   
 
@@ -62,16 +60,8 @@ public class AsyncPaymentService {
     public AsyncPaymentService() {
         ClientConfig clientConfig = new ClientConfig();                    // jersey specific
         clientConfig.connectorProvider(new GrizzlyConnectorProvider());    // jersey specific
-//        clientConfig.connectorProvider(new ApacheConnectorProvider());     // jersey specific
-        
-        RequestConfig reqConfig = RequestConfig.custom()                   // apache HttpClient specific
-                                               .setConnectTimeout(1000)
-                                               .setSocketTimeout(1000)
-                                               .setConnectionRequestTimeout(200)
-                                               .build();            
-        
-  //      clientConfig.property(ApacheClientProperties.REQUEST_CONFIG, reqConfig); // jersey specific
 
+        //...
         
         // use extended client (JAX-RS 2.0 client does not support CompletableFutures)
         client = Java8Client.newClient(ClientBuilder.newClient(clientConfig)); 
@@ -104,9 +94,9 @@ public class AsyncPaymentService {
         paymentDao.getPaymentsAsync(address, 50)
            .thenCompose(pmts -> pmts.isEmpty() 
               ? client.target(creditScoreURI).queryParam("addr", address).request().async().get(Score.class) 
-              : CompletableFuture.completedFuture((pmts.stream().filter(pmt -> pmt.isDelayed()).count() > 1) ? NEGATIVE : POSITIVE))
+              : CompletableFuture.completedFuture((pmts.stream().filter(pmt -> pmt.isDelayed()).count() > 1) ? Score.NEGATIVE : Score.POSITIVE))
            .exceptionally(error -> 
-           NEUTRAL)
+           Score.NEUTRAL)
            .thenApply(SCORE_TO_PAYMENTMETHOD)
            .whenComplete(ResultConsumer.write(resp));  // writes result/error into async response 
     }

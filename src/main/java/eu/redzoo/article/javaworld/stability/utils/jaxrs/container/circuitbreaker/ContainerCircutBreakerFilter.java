@@ -59,13 +59,13 @@ public class ContainerCircutBreakerFilter implements ContainerRequestFilter, Con
     
     @Override
     public void filter(ContainerRequestContext requestContext) throws IOException {
-        String targetOperation = resourceInfo.getResourceClass().getName() + "#" + resourceInfo.getResourceClass().getName(); 
+        String scope = resourceInfo.getResourceClass().getName() + "#" + resourceInfo.getResourceClass().getName(); 
         
-        if (!circuitBreakerRegistry.get(targetOperation).isRequestAllowed()) {
+        if (!circuitBreakerRegistry.get(scope).isRequestAllowed()) {
             throw new CircuitOpenedException("circuit is open");
         }
         
-        Transaction transaction = metricsRegistry.transactions(targetOperation).openTransaction();
+        Transaction transaction = metricsRegistry.transactions(scope).openTransaction();
         requestContext.setProperty(TRANSACTION, transaction);
     }
 

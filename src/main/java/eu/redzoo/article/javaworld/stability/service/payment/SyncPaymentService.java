@@ -102,9 +102,10 @@ public class SyncPaymentService {
                        ? client.target(creditScoreURI).queryParam("addr", address).request().get(Score.class)
                        : (pmts.stream().filter(pmt -> pmt.isDelayed()).count() >= 1) ? NEGATIVE : POSITIVE;
         } catch (RuntimeException rt) {
-            LOG.fine("error occurred by calculating score. Fallback to NEUTRAL " + rt.toString());
+            LOG.fine("error occurred by calculating score. Fallback to " + score + " " + rt.toString());
         }
-        
+    
         return SCORE_TO_PAYMENTMETHOD.apply(score);
     }
+    
 }

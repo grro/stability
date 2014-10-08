@@ -33,7 +33,7 @@ public class CircuitBreaker {
     private final Duration openStateTimeout;
     private final HealthPolicy policy;
 
-    private AtomicReference<CircuitBreakerState> state = new AtomicReference<>(); 
+    private final AtomicReference<CircuitBreakerState> state = new AtomicReference<>(new ClosedState()); 
 
 
     
@@ -41,8 +41,6 @@ public class CircuitBreaker {
         this.scope = scope;
         this.policy = new CachedCircuitBreakerPolicy(healthPolicy, Duration.ofSeconds(3));
         this.openStateTimeout = openStateTimeout;
-
-        state.set(new ClosedState());
     }
     
     

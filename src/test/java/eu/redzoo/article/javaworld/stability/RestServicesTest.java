@@ -19,6 +19,7 @@ package eu.redzoo.article.javaworld.stability;
 
 
 import java.io.File;
+import java.time.Instant;
 import java.util.Set;
 
 import javax.ws.rs.NotFoundException;
@@ -268,6 +269,18 @@ public class RestServicesTest {
         Assert.assertTrue(paymentMethods.contains(CREDITCARD));
         Assert.assertTrue(paymentMethods.contains(PAYPAL));
     }
+    
+    
+    @Test
+    public void testREmoveMe() throws Exception {
+        String result = client.target("http://localhost:9080/service/rest/sync/paymentmethods555")
+                                                  .queryParam("time", Instant.now())
+                                                  .request()
+                                                  .get(String.class);    
+
+        System.out.println(result);
+    }
+    
     
     
     @Test
