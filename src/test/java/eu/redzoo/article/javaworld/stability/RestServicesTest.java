@@ -271,17 +271,7 @@ public class RestServicesTest {
     }
     
     
-    @Test
-    public void testREmoveMe() throws Exception {
-        String result = client.target("http://localhost:9080/service/rest/sync/paymentmethods555")
-                                                  .queryParam("time", Instant.now())
-                                                  .request()
-                                                  .get(String.class);    
 
-        System.out.println(result);
-    }
-    
-    
     
     @Test
     public void testRetrievePaymentMethodKnownUserBad() throws Exception {
